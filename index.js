@@ -12,12 +12,11 @@ app.use(express.json());
 
 let masterData = []; // ตัวแปรเก็บข้อมูล Master Data
 async function initializeMasterData() {
-    try {
-        
-        masterData = await loadMasterData();
-    } catch (error) {
-        masterData = fileDatas
-    }
+  try {
+    masterData = await loadMasterData();
+  } catch (error) {
+    masterData = fileDatas;
+  }
 }
 app.get("/", (req, res) => {
   res.send(masterData);
@@ -44,10 +43,10 @@ app.post("/webhook", async (req, res) => {
       ) {
         replyText = "นี่คือเมนูของเราครับ";
         await replyFlexFiles(replyToken);
-      } 
-    //   else if (userMessage.includes("เมนูอาหาร") || userMessage === "2") {
-    //     await replyFlexMessage(replyToken);
-    //   }
+      }
+      //   else if (userMessage.includes("เมนูอาหาร") || userMessage === "2") {
+      //     await replyFlexMessage(replyToken);
+      //   }
       //   else if (userMessage === "สวัสดี") {
       //     replyText = "สวัสดีครับ! 😊";
       //     await replyMessage(replyToken, replyText);
@@ -247,8 +246,9 @@ async function replyFlexMessage(replyToken) {
 }
 
 async function replyFlexFiles(replyToken) {
-
-  await initializeMasterData()
+  if (masterData.length === 0) {
+    await initializeMasterData();
+  }
 
   const url = "https://api.line.me/v2/bot/message/reply";
   const headers = {
