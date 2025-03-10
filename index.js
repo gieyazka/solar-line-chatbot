@@ -1,16 +1,27 @@
 const express = require("express");
 const axios = require("axios");
+const fileDatas = require("./fileName");
 require("dotenv").config();
 const app = express();
 const PORT = 3000;
 const { Message_Token } = process.env;
 const LINE_ACCESS_TOKEN = Message_Token;
+const xlsx = require("xlsx");
+const { loadMasterData } = require("./util");
 app.use(express.json());
+
+let masterData = []; // ตัวแปรเก็บข้อมูล Master Data
+async function initializeMasterData() {
+  masterData = await loadMasterData();
+}
 app.get("/", (req, res) => {
-  res.send("Hello World");
+  res.send(masterData);
+});
+app.get("/load-master", async (req, res) => {
+  await initializeMasterData();
+  res.send("load success");
 });
 app.post("/webhook", async (req, res) => {
-    console.log('13', 13)
   const events = req.body.events;
   if (!events || events.length === 0) {
     return res.sendStatus(200);
@@ -23,14 +34,15 @@ app.post("/webhook", async (req, res) => {
 
       let replyText = "ฉันไม่เข้าใจ กรุณาลองใหม่"; // ค่าเริ่มต้น
       if (
-        userMessage.includes("แบบฟอร์มตอบรับเข้าร่วมโครงการ") ||
-        userMessage === "1"
+        userMessage.includes("แบบฟอร์มตอบรับเข้าร่วมโครงการ")
+        // ||        userMessage === "1"
       ) {
         replyText = "นี่คือเมนูของเราครับ";
         await replyFlexFiles(replyToken);
-      } else if (userMessage.includes("เมนูอาหาร") || userMessage === "2") {
-        await replyFlexMessage(replyToken);
-      }
+      } 
+    //   else if (userMessage.includes("เมนูอาหาร") || userMessage === "2") {
+    //     await replyFlexMessage(replyToken);
+    //   }
       //   else if (userMessage === "สวัสดี") {
       //     replyText = "สวัสดีครับ! 😊";
       //     await replyMessage(replyToken, replyText);
@@ -58,7 +70,8 @@ async function replyMessage(replyToken, text) {
   await axios.post(url, body, { headers });
 }
 
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
+  await initializeMasterData();
   console.log(`Server is running on port ${PORT}`);
 });
 
@@ -84,7 +97,7 @@ async function replyFlexMessage(replyToken) {
             contents: [
               {
                 type: "image",
-                url: "https://developers-resource.landpress.line.me/fx/clip/clip3.jpg",
+                url: "https://moevethailand-my.sharepoint.com/:i:/g/personal/pokkate_e_moevedigital_com/EUfTe33PZO9Pl2Rt7KAwTX8BGPxFZzXwlTpAijUCPpeLvg?e=lqVBKU",
                 size: "full",
                 aspectMode: "cover",
                 aspectRatio: "1:1",
@@ -102,85 +115,86 @@ async function replyFlexMessage(replyToken) {
                   startColor: "#00000099",
                 },
                 width: "100%",
-                height: "40%",
+                height: "50%",
                 offsetBottom: "0px",
                 offsetStart: "0px",
                 offsetEnd: "0px",
-              },
+              }, //เงา
               {
                 type: "box",
                 layout: "vertical",
                 contents: [
-                  //   {
-                  //     type: "box",
-                  //     layout: "vertical",
-                  //     contents: [
-                  //       {
-                  //         type: "text",
-                  //         text: "Brown Grand Hotel",
-                  //         size: "xl",
-                  //         color: "#ffffff",
-                  //         weight: "bold",
-                  //       },
-                  //       {
-                  //         type: "box",
-                  //         layout: "baseline",
-                  //         contents: [
-                  //           {
-                  //             type: "icon",
-                  //             url: "https://via.placeholder.com/20x20",
-                  //           },
-                  //           {
-                  //             type: "icon",
-                  //             url: "https://via.placeholder.com/20x20",
-                  //           },
-                  //           {
-                  //             type: "icon",
-                  //             url: "https://via.placeholder.com/20x20",
-                  //           },
-                  //           {
-                  //             type: "icon",
-                  //             url: "https://via.placeholder.com/20x20",
-                  //           },
-                  //           {
-                  //             type: "icon",
-                  //             url: "https://via.placeholder.com/20x20",
-                  //           },
-                  //           {
-                  //             type: "text",
-                  //             text: "4.0",
-                  //             color: "#a9a9a9",
-                  //             size: "sm",
-                  //           },
-                  //         ],
-                  //         spacing: "xs",
-                  //       },
-                  //       {
-                  //         type: "box",
-                  //         layout: "horizontal",
-                  //         contents: [
-                  //           {
-                  //             type: "text",
-                  //             text: "¥62,000",
-                  //             color: "#ffffff",
-                  //             size: "md",
-                  //             flex: 0,
-                  //             align: "end",
-                  //           },
-                  //           {
-                  //             type: "text",
-                  //             text: "¥82,000",
-                  //             color: "#a9a9a9",
-                  //             decoration: "line-through",
-                  //             size: "sm",
-                  //             align: "end",
-                  //           },
-                  //         ],
-                  //         spacing: "lg",
-                  //       },
-                  //     ],
-                  //     spacing: "xs",
-                  //   },
+                  {
+                    type: "box",
+                    layout: "vertical",
+                    contents: [
+                      {
+                        type: "text",
+                        text: "Brown Grand Hotel",
+                        size: "xl",
+                        color: "#ffffff",
+                        weight: "bold",
+                      },
+                      // {
+                      //   type: "box",
+                      //   layout: "baseline",
+                      //   contents: [
+                      //     {
+                      //       type: "icon",
+                      //       url: "https://via.placeholder.com/20x20",
+                      //     },
+                      //     {
+                      //       type: "icon",
+                      //       url: "https://via.placeholder.com/20x20",
+                      //     },
+                      //     {
+                      //       type: "icon",
+                      //       url: "https://via.placeholder.com/20x20",
+                      //     },
+                      //     {
+                      //       type: "icon",
+                      //       url: "https://via.placeholder.com/20x20",
+                      //     },
+                      //     {
+                      //       type: "icon",
+                      //       url: "https://via.placeholder.com/20x20",
+                      //     },
+                      //     {
+                      //       type: "text",
+                      //       text: "4.0",
+                      //       color: "#a9a9a9",
+                      //       size: "sm",
+                      //     },
+                      //   ],
+                      //   spacing: "xs",
+                      // },
+                      // {
+                      //   type: "box",
+                      //   layout: "horizontal",
+                      //   contents: [
+                      //     {
+                      //       type: "text",
+                      //       text: "¥62,000",
+                      //       color: "#ffffff",
+                      //       size: "md",
+                      //       flex: 0,
+                      //       align: "end",
+                      //     },
+                      //     {
+                      //       type: "text",
+                      //       text: "¥82,000",
+                      //       color: "#a9a9a9",
+                      //       decoration: "line-through",
+                      //       size: "sm",
+                      //       align: "end",
+                      //     },
+                      //   ],
+                      //   spacing: "lg",
+                      // },
+                    ],
+                    spacing: "xs",
+                    paddingBottom: "4px",
+                  },
                   {
                     type: "button",
                     style: "primary",
@@ -196,7 +210,8 @@ async function replyFlexMessage(replyToken) {
                 offsetBottom: "0px",
                 offsetStart: "0px",
                 offsetEnd: "0px",
-                paddingAll: "20px",
+                paddingAll: "10px",
+                paddingBottom: "10px",
               },
             ],
             paddingAll: "0px",
@@ -241,8 +256,8 @@ async function replyFlexFiles(replyToken) {
         altText: "เลือกไฟล์ที่ต้องการดาวน์โหลด",
         contents: {
           type: "carousel",
-          contents: [
-            {
+          contents: fileDatas.map((fileData) => {
+            return {
               type: "bubble",
               body: {
                 type: "box",
@@ -250,11 +265,13 @@ async function replyFlexFiles(replyToken) {
                 contents: [
                   {
                     type: "text",
-                    text: "ไฟล์ 1: คู่มือการใช้งาน",
+                    text: fileData.label,
+                    wrap: true,
+                    maxLines: 3,
                     weight: "bold",
                     size: "lg",
                   },
-                  { type: "text", text: "PDF - 10MB", wrap: true, size: "sm" },
+                  // { type: "text", text: "PDF - 10MB", wrap: true, size: "sm" },
                 ],
               },
               footer: {
@@ -264,81 +281,117 @@ async function replyFlexFiles(replyToken) {
                   {
                     type: "button",
                     style: "primary",
-                    color: "#00B050",
+                    color: fileData.color,
                     action: {
                       type: "uri",
-                      label: "ดาวน์โหลด PDF",
-                      uri: "https://moevethailand-my.sharepoint.com/:b:/g/personal/atchariyapon_k_moevedigital_com/ESer7F0O7mBHlsOORTT6LGUBpSAD5IfkUOy4SU_i4ATsBA?e=irmAmi",
+                      label: "ดาวน์โหลด",
+                      uri: fileData.url,
                     },
                   },
                 ],
               },
-            },
-            {
-              type: "bubble",
-              body: {
-                type: "box",
-                layout: "vertical",
-                contents: [
-                  {
-                    type: "text",
-                    text: "ไฟล์ 2: รายงานการขาย",
-                    weight: "bold",
-                    size: "lg",
-                  },
-                  { type: "text", text: "Excel - 5MB", wrap: true, size: "sm" },
-                ],
-              },
-              footer: {
-                type: "box",
-                layout: "vertical",
-                contents: [
-                  {
-                    type: "button",
-                    style: "primary",
-                    color: "#007BFF",
-                    action: {
-                      type: "uri",
-                      label: "ดาวน์โหลด Excel",
-                      uri: "https://your-server.com/files/sales.xlsx",
-                    },
-                  },
-                ],
-              },
-            },
-            {
-              type: "bubble",
-              body: {
-                type: "box",
-                layout: "vertical",
-                contents: [
-                  {
-                    type: "text",
-                    text: "ไฟล์ 3: สัญญาจ้าง",
-                    weight: "bold",
-                    size: "lg",
-                  },
-                  { type: "text", text: "Word - 2MB", wrap: true, size: "sm" },
-                ],
-              },
-              footer: {
-                type: "box",
-                layout: "vertical",
-                contents: [
-                  {
-                    type: "button",
-                    style: "primary",
-                    color: "#FF5733",
-                    action: {
-                      type: "uri",
-                      label: "ดาวน์โหลด Word",
-                      uri: "https://your-server.com/files/contract.docx",
-                    },
-                  },
-                ],
-              },
-            },
-          ],
+            };
+          }),
+
+          //    [
+
+          //     {
+          //       type: "bubble",
+          //       body: {
+          //         type: "box",
+          //         layout: "vertical",
+          //         contents: [
+          //           {
+          //             type: "text",
+          //             text: "ไฟล์ 1: คู่มือการใช้งาน",
+          //             weight: "bold",
+          //             size: "lg",
+          //           },
+          //           { type: "text", text: "PDF - 10MB", wrap: true, size: "sm" },
+          //         ],
+          //       },
+          //       footer: {
+          //         type: "box",
+          //         layout: "vertical",
+          //         contents: [
+          //           {
+          //             type: "button",
+          //             style: "primary",
+          //             color: "#00B050",
+          //             action: {
+          //               type: "uri",
+          //               label: "ดาวน์โหลด PDF",
+          //               uri: "https://moevethailand-my.sharepoint.com/:b:/g/personal/atchariyapon_k_moevedigital_com/ESer7F0O7mBHlsOORTT6LGUBpSAD5IfkUOy4SU_i4ATsBA?e=irmAmi",
+          //             },
+          //           },
+          //         ],
+          //       },
+          //     },
+          //     {
+          //       type: "bubble",
+          //       body: {
+          //         type: "box",
+          //         layout: "vertical",
+          //         contents: [
+          //           {
+          //             type: "text",
+          //             text: "ไฟล์ 2: รายงานการขาย",
+          //             weight: "bold",
+          //             size: "lg",
+          //           },
+          //           { type: "text", text: "Excel - 5MB", wrap: true, size: "sm" },
+          //         ],
+          //       },
+          //       footer: {
+          //         type: "box",
+          //         layout: "vertical",
+          //         contents: [
+          //           {
+          //             type: "button",
+          //             style: "primary",
+          //             color: "#007BFF",
+          //             action: {
+          //               type: "uri",
+          //               label: "ดาวน์โหลด Excel",
+          //               uri: "https://your-server.com/files/sales.xlsx",
+          //             },
+          //           },
+          //         ],
+          //       },
+          //     },
+          //     {
+          //       type: "bubble",
+          //       body: {
+          //         type: "box",
+          //         layout: "vertical",
+          //         contents: [
+          //           {
+          //             type: "text",
+          //             text: "ไฟล์ 3: สัญญาจ้าง",
+          //             weight: "bold",
+          //             size: "lg",
+          //           },
+          //           { type: "text", text: "Word - 2MB", wrap: true, size: "sm" },
+          //         ],
+          //       },
+          //       footer: {
+          //         type: "box",
+          //         layout: "vertical",
+          //         contents: [
+          //           {
+          //             type: "button",
+          //             style: "primary",
+          //             color: "#FF5733",
+          //             action: {
+          //               type: "uri",
+          //               label: "ดาวน์โหลด Word",
+          //               uri: "https://your-server.com/files/contract.docx",
+          //             },
+          //           },
+          //         ],
+          //       },
+          //     },
+          //   ],
         },
       },
     ],
