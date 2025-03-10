@@ -76,7 +76,7 @@ async function replyMessage(replyToken, text) {
 }
 
 app.listen(PORT, async () => {
-  await initializeMasterData();
+  // await initializeMasterData();
   console.log(`Server is running on port ${PORT}`);
 });
 
@@ -247,6 +247,9 @@ async function replyFlexMessage(replyToken) {
 }
 
 async function replyFlexFiles(replyToken) {
+
+  await initializeMasterData()
+
   const url = "https://api.line.me/v2/bot/message/reply";
   const headers = {
     "Content-Type": "application/json",
