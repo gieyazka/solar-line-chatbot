@@ -256,7 +256,7 @@ async function replyFlexFiles(replyToken) {
         altText: "เลือกไฟล์ที่ต้องการดาวน์โหลด",
         contents: {
           type: "carousel",
-          contents: fileDatas.map((fileData) => {
+          contents: masterData.map((fileData) => {
             return {
               type: "bubble",
               body: {
