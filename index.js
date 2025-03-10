@@ -6,7 +6,9 @@ const PORT = 3000;
 const { Message_Token } = process.env;
 const LINE_ACCESS_TOKEN = Message_Token;
 app.use(express.json());
-
+app.get("/", (req, res) => {
+  res.send("Hello World");
+});
 app.post("/webhook", async (req, res) => {
   const events = req.body.events;
   if (!events || events.length === 0) {
@@ -108,76 +110,76 @@ async function replyFlexMessage(replyToken) {
                 type: "box",
                 layout: "vertical",
                 contents: [
-                //   {
-                //     type: "box",
-                //     layout: "vertical",
-                //     contents: [
-                //       {
-                //         type: "text",
-                //         text: "Brown Grand Hotel",
-                //         size: "xl",
-                //         color: "#ffffff",
-                //         weight: "bold",
-                //       },
-                //       {
-                //         type: "box",
-                //         layout: "baseline",
-                //         contents: [
-                //           {
-                //             type: "icon",
-                //             url: "https://via.placeholder.com/20x20",
-                //           },
-                //           {
-                //             type: "icon",
-                //             url: "https://via.placeholder.com/20x20",
-                //           },
-                //           {
-                //             type: "icon",
-                //             url: "https://via.placeholder.com/20x20",
-                //           },
-                //           {
-                //             type: "icon",
-                //             url: "https://via.placeholder.com/20x20",
-                //           },
-                //           {
-                //             type: "icon",
-                //             url: "https://via.placeholder.com/20x20",
-                //           },
-                //           {
-                //             type: "text",
-                //             text: "4.0",
-                //             color: "#a9a9a9",
-                //             size: "sm",
-                //           },
-                //         ],
-                //         spacing: "xs",
-                //       },
-                //       {
-                //         type: "box",
-                //         layout: "horizontal",
-                //         contents: [
-                //           {
-                //             type: "text",
-                //             text: "¥62,000",
-                //             color: "#ffffff",
-                //             size: "md",
-                //             flex: 0,
-                //             align: "end",
-                //           },
-                //           {
-                //             type: "text",
-                //             text: "¥82,000",
-                //             color: "#a9a9a9",
-                //             decoration: "line-through",
-                //             size: "sm",
-                //             align: "end",
-                //           },
-                //         ],
-                //         spacing: "lg",
-                //       },
-                //     ],
-                //     spacing: "xs",
-                //   },
+                  //   {
+                  //     type: "box",
+                  //     layout: "vertical",
+                  //     contents: [
+                  //       {
+                  //         type: "text",
+                  //         text: "Brown Grand Hotel",
+                  //         size: "xl",
+                  //         color: "#ffffff",
+                  //         weight: "bold",
+                  //       },
+                  //       {
+                  //         type: "box",
+                  //         layout: "baseline",
+                  //         contents: [
+                  //           {
+                  //             type: "icon",
+                  //             url: "https://via.placeholder.com/20x20",
+                  //           },
+                  //           {
+                  //             type: "icon",
+                  //             url: "https://via.placeholder.com/20x20",
+                  //           },
+                  //           {
+                  //             type: "icon",
+                  //             url: "https://via.placeholder.com/20x20",
+                  //           },
+                  //           {
+                  //             type: "icon",
+                  //             url: "https://via.placeholder.com/20x20",
+                  //           },
+                  //           {
+                  //             type: "icon",
+                  //             url: "https://via.placeholder.com/20x20",
+                  //           },
+                  //           {
+                  //             type: "text",
+                  //             text: "4.0",
+                  //             color: "#a9a9a9",
+                  //             size: "sm",
+                  //           },
+                  //         ],
+                  //         spacing: "xs",
+                  //       },
+                  //       {
+                  //         type: "box",
+                  //         layout: "horizontal",
+                  //         contents: [
+                  //           {
+                  //             type: "text",
+                  //             text: "¥62,000",
+                  //             color: "#ffffff",
+                  //             size: "md",
+                  //             flex: 0,
+                  //             align: "end",
+                  //           },
+                  //           {
+                  //             type: "text",
+                  //             text: "¥82,000",
+                  //             color: "#a9a9a9",
+                  //             decoration: "line-through",
+                  //             size: "sm",
+                  //             align: "end",
+                  //           },
+                  //         ],
+                  //         spacing: "lg",
+                  //       },
+                  //     ],
+                  //     spacing: "xs",
+                  //   },
                   {
                     type: "button",
                     style: "primary",
