@@ -10,6 +10,7 @@ app.get("/", (req, res) => {
   res.send("Hello World");
 });
 app.post("/webhook", async (req, res) => {
+    console.log('13', 13)
   const events = req.body.events;
   if (!events || events.length === 0) {
     return res.sendStatus(200);
