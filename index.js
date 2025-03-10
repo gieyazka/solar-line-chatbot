@@ -12,7 +12,12 @@ app.use(express.json());
 
 let masterData = []; // ตัวแปรเก็บข้อมูล Master Data
 async function initializeMasterData() {
-  masterData = await loadMasterData();
+    try {
+        
+        masterData = await loadMasterData();
+    } catch (error) {
+        masterData = fileDatas
+    }
 }
 app.get("/", (req, res) => {
   res.send(masterData);
