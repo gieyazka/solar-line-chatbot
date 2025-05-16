@@ -14,7 +14,6 @@ let masterData = []; // ตัวแปรเก็บข้อมูล Master 
 async function initializeMasterData() {
   try {
     const res = await loadMasterData();
-    console.log("loadmaster", res);
     masterData = res;
   } catch (error) {
     masterData = fileDatas;
@@ -25,7 +24,7 @@ app.get("/get-normal", async (req, res) => {
   res.send(masterData);
 });
 app.get("/get-message-reply", async (req, res) => {
-  await initializeMasterData();
+  const data = await initializeMasterData();
   const body = {
     messages: [
       {
@@ -33,7 +32,7 @@ app.get("/get-message-reply", async (req, res) => {
         altText: "เลือกไฟล์ที่ต้องการดาวน์โหลด",
         contents: {
           type: "carousel",
-          contents: res.map((fileData) => {
+          contents: data.map((fileData) => {
             return {
               type: "bubble",
               body: {
@@ -74,7 +73,7 @@ app.get("/get-message-reply", async (req, res) => {
     ],
   };
 
-  res.send(JSON.stringify(body));
+  res.send(body);
 });
 app.get("/", async (req, res) => {
   await initializeMasterData();
