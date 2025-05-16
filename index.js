@@ -74,7 +74,7 @@ app.get("/get-message-reply", async (req, res) => {
     ],
   };
 
-  res.send(body);
+  res.send(JSON.stringify(body));
 });
 app.get("/", async (req, res) => {
   await initializeMasterData();
