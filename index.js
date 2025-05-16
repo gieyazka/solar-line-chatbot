@@ -18,6 +18,7 @@ async function initializeMasterData() {
   } catch (error) {
     masterData = fileDatas;
   }
+  return masterData;
 }
 app.get("/", async (req, res) => {
   await initializeMasterData();
@@ -257,7 +258,7 @@ async function replyFlexFiles(replyToken) {
     "Content-Type": "application/json",
     Authorization: `Bearer ${LINE_ACCESS_TOKEN}`,
   };
-
+  console.log("res", res);
   const body = {
     replyToken: replyToken,
     messages: [
