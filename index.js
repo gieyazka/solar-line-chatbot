@@ -24,6 +24,58 @@ async function initializeMasterData() {
 app.get("/get-normal", async (req, res) => {
   res.send(masterData);
 });
+app.get("/get-message-reply", async (req, res) => {
+  await initializeMasterData();
+  const body = {
+    messages: [
+      {
+        type: "flex",
+        altText: "เลือกไฟล์ที่ต้องการดาวน์โหลด",
+        contents: {
+          type: "carousel",
+          contents: res.map((fileData) => {
+            return {
+              type: "bubble",
+              body: {
+                type: "box",
+                layout: "vertical",
+                contents: [
+                  {
+                    type: "text",
+                    text: fileData.label,
+                    wrap: true,
+                    maxLines: 3,
+                    weight: "bold",
+                    size: "lg",
+                  },
+                  // { type: "text", text: "PDF - 10MB", wrap: true, size: "sm" },
+                ],
+              },
+              footer: {
+                type: "box",
+                layout: "vertical",
+                contents: [
+                  {
+                    type: "button",
+                    style: "primary",
+                    color: fileData.color,
+                    action: {
+                      type: "uri",
+                      label: "ดาวน์โหลด",
+                      uri: fileData.url,
+                    },
+                  },
+                ],
+              },
+            };
+          }),
+        },
+      },
+    ],
+  };
+
+  res.send(body);
+});
 app.get("/", async (req, res) => {
   await initializeMasterData();
   res.send(masterData);
