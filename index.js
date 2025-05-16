@@ -21,6 +21,9 @@ async function initializeMasterData() {
   }
   return masterData;
 }
+app.get("/get-normal", async (req, res) => {
+  res.send(masterData);
+});
 app.get("/", async (req, res) => {
   await initializeMasterData();
   res.send(masterData);
@@ -266,7 +269,6 @@ async function replyFlexFiles(replyToken) {
     "Content-Type": "application/json",
     Authorization: `Bearer ${LINE_ACCESS_TOKEN}`,
   };
-  console.log("res", res);
   const body = {
     replyToken: replyToken,
     messages: [
