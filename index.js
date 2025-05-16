@@ -13,12 +13,14 @@ app.use(express.json());
 let masterData = []; // ตัวแปรเก็บข้อมูล Master Data
 async function initializeMasterData() {
   try {
-    masterData = await loadMasterData();
+    const res = await loadMasterData();
+    masterData = res;
   } catch (error) {
     masterData = fileDatas;
   }
 }
-app.get("/", (req, res) => {
+app.get("/", async (req, res) => {
+  await initializeMasterData();
   res.send(masterData);
 });
 app.get("/load-master", async (req, res) => {
@@ -35,7 +37,6 @@ app.post("/webhook", async (req, res) => {
     if (event.type === "message" && event.message.type === "text") {
       const replyToken = event.replyToken;
       const userMessage = event.message.text;
-
       let replyText = "ฉันไม่เข้าใจ กรุณาลองใหม่"; // ค่าเริ่มต้น
       if (
         userMessage.includes("แบบฟอร์มตอบรับเข้าร่วมโครงการ")
@@ -246,8 +247,9 @@ async function replyFlexMessage(replyToken) {
 }
 
 async function replyFlexFiles(replyToken) {
+  let res = masterData;
   if (masterData.length === 0) {
-    await initializeMasterData();
+    res = await initializeMasterData();
   }
 
   const url = "https://api.line.me/v2/bot/message/reply";
@@ -264,7 +266,7 @@ async function replyFlexFiles(replyToken) {
         altText: "เลือกไฟล์ที่ต้องการดาวน์โหลด",
         contents: {
           type: "carousel",
-          contents: masterData.map((fileData) => {
+          contents: res.map((fileData) => {
             return {
               type: "bubble",
               body: {
@@ -300,106 +302,6 @@ async function replyFlexFiles(replyToken) {
               },
             };
           }),
-
-          //    [
-
-          //     {
-          //       type: "bubble",
-          //       body: {
-          //         type: "box",
-          //         layout: "vertical",
-          //         contents: [
-          //           {
-          //             type: "text",
-          //             text: "ไฟล์ 1: คู่มือการใช้งาน",
-          //             weight: "bold",
-          //             size: "lg",
-          //           },
-          //           { type: "text", text: "PDF - 10MB", wrap: true, size: "sm" },
-          //         ],
-          //       },
-          //       footer: {
-          //         type: "box",
-          //         layout: "vertical",
-          //         contents: [
-          //           {
-          //             type: "button",
-          //             style: "primary",
-          //             color: "#00B050",
-          //             action: {
-          //               type: "uri",
-          //               label: "ดาวน์โหลด PDF",
-          //               uri: "https://moevethailand-my.sharepoint.com/:b:/g/personal/atchariyapon_k_moevedigital_com/ESer7F0O7mBHlsOORTT6LGUBpSAD5IfkUOy4SU_i4ATsBA?e=irmAmi",
-          //             },
-          //           },
-          //         ],
-          //       },
-          //     },
-          //     {
-          //       type: "bubble",
-          //       body: {
-          //         type: "box",
-          //         layout: "vertical",
-          //         contents: [
-          //           {
-          //             type: "text",
-          //             text: "ไฟล์ 2: รายงานการขาย",
-          //             weight: "bold",
-          //             size: "lg",
-          //           },
-          //           { type: "text", text: "Excel - 5MB", wrap: true, size: "sm" },
-          //         ],
-          //       },
-          //       footer: {
-          //         type: "box",
-          //         layout: "vertical",
-          //         contents: [
-          //           {
-          //             type: "button",
-          //             style: "primary",
-          //             color: "#007BFF",
-          //             action: {
-          //               type: "uri",
-          //               label: "ดาวน์โหลด Excel",
-          //               uri: "https://your-server.com/files/sales.xlsx",
-          //             },
-          //           },
-          //         ],
-          //       },
-          //     },
-          //     {
-          //       type: "bubble",
-          //       body: {
-          //         type: "box",
-          //         layout: "vertical",
-          //         contents: [
-          //           {
-          //             type: "text",
-          //             text: "ไฟล์ 3: สัญญาจ้าง",
-          //             weight: "bold",
-          //             size: "lg",
-          //           },
-          //           { type: "text", text: "Word - 2MB", wrap: true, size: "sm" },
-          //         ],
-          //       },
-          //       footer: {
-          //         type: "box",
-          //         layout: "vertical",
-          //         contents: [
-          //           {
-          //             type: "button",
-          //             style: "primary",
-          //             color: "#FF5733",
-          //             action: {
-          //               type: "uri",
-          //               label: "ดาวน์โหลด Word",
-          //               uri: "https://your-server.com/files/contract.docx",
-          //             },
-          //           },
-          //         ],
-          //       },
-          //     },
-          //   ],
         },
       },
     ],
