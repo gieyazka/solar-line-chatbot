@@ -14,6 +14,7 @@ let masterData = []; // ตัวแปรเก็บข้อมูล Master 
 async function initializeMasterData() {
   try {
     const res = await loadMasterData();
+    console.log("loadmaster", res);
     masterData = res;
   } catch (error) {
     masterData = fileDatas;
@@ -25,14 +26,15 @@ app.get("/", async (req, res) => {
   res.send(masterData);
 });
 app.get("/load-master", async (req, res) => {
-  masterData = [];
-  console.log("clear data")
-  res.send("clear success");
+  await initializeMasterData();
+  res.send("load success");
 });
 
 app.get("/clear-master", async (req, res) => {
-  await initializeMasterData();
-  res.send("load success");
+  masterData = [];
+
+  console.log("clear data");
+  res.send("clear success");
 });
 app.post("/webhook", async (req, res) => {
   const events = req.body.events;
