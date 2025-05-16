@@ -25,6 +25,12 @@ app.get("/", async (req, res) => {
   res.send(masterData);
 });
 app.get("/load-master", async (req, res) => {
+  masterData = [];
+  console.log("clear data")
+  res.send("clear success");
+});
+
+app.get("/clear-master", async (req, res) => {
   await initializeMasterData();
   res.send("load success");
 });
