@@ -248,7 +248,7 @@ async function replyFlexMessage(replyToken) {
 
 async function replyFlexFiles(replyToken) {
   let res = masterData;
-  if (masterData.length === 0) {
+  if (res.length === 0) {
     res = await initializeMasterData();
   }
 
