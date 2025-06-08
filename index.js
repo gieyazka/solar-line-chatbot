@@ -92,6 +92,7 @@ app.get("/clear-master", async (req, res) => {
 });
 app.post("/webhook", async (req, res) => {
   const events = req.body.events;
+  console.log("events", events);
   if (!events || events.length === 0) {
     return res.sendStatus(200);
   }
